@@ -59,7 +59,7 @@ class Login extends Component{
                                     name="username" 
                                     onChange={this.handleChange}
                                     value={this.state.username} />
-                                <label for="icon_prefix">Username</label>
+                                <label htmlFor="icon_prefix">Username</label>
                                 <div className="error-msg">{this.state.usernameError}</div>
                             </div>
                         </div>
@@ -73,7 +73,7 @@ class Login extends Component{
                                     name="password" 
                                     value={this.state.password}
                                     onChange={this.handleChange} />
-                                <label for="password">Password</label>
+                                <label htmlFor="password">Password</label>
                                 <div className="error-msg">{this.state.passwordError}</div>
                             </div>
                         </div>
