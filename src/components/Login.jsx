@@ -1,26 +1,80 @@
 import React, { Component } from 'react';
 
+const initialState ={
+    username:'',
+    password:'',
+    usernameError:'',
+    passwordError:''
+}
+
 class Login extends Component{
     constructor(){
         super();
+        this.state = initialState;
     }
+
+    validate = () => {
+        let usernameError = '';
+        let passwordError = '';
+
+        if(!this.state.username){
+            usernameError = "Please enter username";
+        }
+        if(!this.state.password){
+            passwordError = 'Please enter password';
+        }
+        if(usernameError || passwordError){
+            this.setState({usernameError, passwordError});
+            return false;
+        }
+        return true;
+    }
+
+    handleSubmit = event =>{
+        event.preventDefault();
+        const isValid = this.validate();
+        if(isValid){
+            console.log(this.state);
+            //reset to initial state
+            this.setState(initialState);
+        }       
+    }
+
+    handleChange = (e) =>{
+        this.setState({[e.target.name]: e.target.value}); 
+    }
+
     render(){
         return(
             <div id="Login">
                 <div className="row">
-                    <form className="col s12">
+                    <form className="col s12" onSubmit={this.handleSubmit}>
                         <div className="row">
                             <div className="input-field col s6 offset-s3">
                                 <i className="material-icons prefix">account_circle</i>
-                                <input id="icon_prefix" type="text" className="validate" />
+                                <input 
+                                    id="icon_prefix" 
+                                    type="text" 
+                                    className="validate" 
+                                    name="username" 
+                                    onChange={this.handleChange}
+                                    value={this.state.username} />
                                 <label for="icon_prefix">Username</label>
+                                <div className="error-msg">{this.state.usernameError}</div>
                             </div>
                         </div>
                         <div className="row">
                             <div className="input-field col s6 offset-s3">
-                            <i className="material-icons prefix">apps</i>
-                            <input id="password" type="password" className="validate" />
-                            <label for="password">Password</label>
+                                <i className="material-icons prefix">apps</i>
+                                <input 
+                                    id="password" 
+                                    type="password" 
+                                    className="validate" 
+                                    name="password" 
+                                    value={this.state.password}
+                                    onChange={this.handleChange} />
+                                <label for="password">Password</label>
+                                <div className="error-msg">{this.state.passwordError}</div>
                             </div>
                         </div>
                         <div className="row">

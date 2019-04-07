@@ -14,6 +14,7 @@ class App extends Component {
       <Router>
         <div className="App">
         <div className="container">
+          <div className="row">
             <ul className="tabs">
               <li className="tab col s6">
                 <Link to="/" className="active">Login</Link>
@@ -26,9 +27,9 @@ class App extends Component {
             <Route path="/register" component={Register} />
           </div>
         </div>
-      </Router>
-    );
-  }
+      </div>
+    </Router>
+  );}
 }
 
 export default App;
