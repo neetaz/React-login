@@ -3,19 +3,40 @@ import React, { Component } from 'react';
 const initialState ={
     username:'',
     password:'',
+    userID:'', 
     usernameError:'',
-    passwordError:''
+    passwordError:'',
+    loginError:'',
+    loginSuccess: false,
+    redirect:false
 }
 
 class Login extends Component{
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = initialState;
+    }
+
+    handleChange = (e) =>{
+        this.setState({[e.target.name]: e.target.value}); 
+    }
+
+    isUserValid() {
+        return this.props.users.find((element) => {
+           return (element.username === this.state.username && element.password === this.state.password) ? element : false;
+        })
+    }
+
+    handleLoginSuccess = (e) =>{
+        if(this.state.redirect){
+            this.props.history.push('/users');          
+        }
     }
 
     validate = () => {
         let usernameError = '';
         let passwordError = '';
+        let loginError = '';
 
         if(!this.state.username){
             usernameError = "Please enter username";
@@ -24,8 +45,24 @@ class Login extends Component{
             passwordError = 'Please enter password';
         }
         if(usernameError || passwordError){
+            // set error messages
             this.setState({usernameError, passwordError});
+             //set login fail
+            this.setState({loginSuccess:false});
             return false;
+        } else{
+            // check user exists
+            let validUser = this.isUserValid();
+            if(validUser){
+                //console.log(validUser);
+                this.setState({userID:validUser.id});
+                this.setState({redirect:true});
+                return true;
+            }else{
+                loginError = 'Please enter valid username and password';
+                this.setState({loginError});
+                return false;
+            }
         }
         return true;
     }
@@ -34,17 +71,17 @@ class Login extends Component{
         event.preventDefault();
         const isValid = this.validate();
         if(isValid){
+            //set login success
+            this.setState({loginSuccess:true});
             console.log(this.state);
-            //reset to initial state
-            this.setState(initialState);
+            if(this.state.loginSuccess){
+                this.handleLoginSuccess();
+            }
         }       
     }
 
-    handleChange = (e) =>{
-        this.setState({[e.target.name]: e.target.value}); 
-    }
-
     render(){
+        //console.log(this.props.users);
         return(
             <div id="Login">
                 <div className="row">
@@ -84,6 +121,9 @@ class Login extends Component{
                             <button className="btn waves-effect waves-light" type="submit" name="action">login
                                 <i className="material-icons right">send</i>
                             </button>
+                        </div>
+                        <div className="row">
+                            <div className="error-msg">{this.state.loginError}</div>
                         </div>
                         <div className="divider"></div>
                         <div className="row login-footer section">
